@@ -5,6 +5,7 @@
 #include <z_/imp/u8arr.h>
 #include <z_/types/arr.h>
 #include <z_/types/bytes.h>
+#include <z_/types/hashset.h>
 #include <z_/types/mem.h>
 #include <z_/types/string.h>
 #include <z_/types/typeof.h>
@@ -25,10 +26,12 @@ void hw_Module_new(hw_Module *mod)
     z__Arr_new(&mod->data, 512);
     z__Arr_new(&mod->code, 128);
     z__Arr_new(&mod->fnpoints, 8);
+    z__HashStr_new(&mod->fnsymbs);
 }
 
 void hw_Module_delete(hw_Module *mod)
 {
+    z__HashStr_delete(&mod->fnsymbs);
     z__Arr_delete(&mod->fnpoints);
     z__Arr_delete(&mod->code);
     z__Arr_delete(&mod->data);
@@ -104,6 +107,13 @@ hw_Func hw_Module_add_blank_fn(
     , hw_uint const arg_count, hw_uint const *argT
     , hw_uint const mut_count, hw_uint const *mutT)
 {
+    hw_DEBUG_CODE(
+        hw_uint *_u = NULL;
+        z__HashStr_getreff(&mod->fnsymbs, z__Str((char *)name, name_size), &_u);
+        hw_assert(_u == NULL, "Function %s, exist", name);
+    );
+    z__HashStr_set(&mod->fnsymbs, z__Str((char *)name, name_size), mod->code.lenUsed);
+
     z__Arr_push(&mod->fnpoints, mod->code.lenUsed);  
     z__Arr_expand_ifneeded(&mod->code, 11);
 

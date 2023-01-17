@@ -19,6 +19,58 @@
 
 #include "compiler.h"
 
+typedef struct hw_TypeMeta hw_TypeMeta;
+typedef struct hw_TypeMeta {
+    hw_uint typeID;
+    hw_uint subT_count;
+    hw_TypeMeta *subT;
+} hw_TypeMeta;
+
+typedef struct hw_ArgProto {
+    hw_uint arg_count;
+    hw_uint mut_count;
+    hw_TypeMeta *argTm;
+    hw_TypeMeta *mutTm;
+} hw_ArgProto;
+
+typedef z__Arr(hw_ArgProto) hw_ArgProtoArr;
+
+typedef struct hw_TypeSysMeta {
+    hw_uint typeID;
+    struct {
+        z__String name;
+        hw_ArgProtoArr arg_proto; //Multiple for argument overloading
+   } typefn_bin[6];
+
+} hw_TypeSysMeta;
+
+typedef struct hw_VarMeta {
+    hw_uint index;
+    hw_uint ctor_idx;
+    enum { ctor_method_data, ctor_method_var } ctor_method;
+    hw_uint type;
+    struct {
+        hw_byte is_const;
+    } attr;
+} hw_VarMeta;
+
+typedef struct hw_CompilerState hw_CompilerState;
+struct hw_CompilerState {
+    struct {
+        z__HashStr(hw_VarMeta) var_states;
+    } fn_info;
+    hw_Module *module;
+    FILE *logfp;
+    hw_Func fn;
+    hw_uint fn_id;
+    hw_Scanner scanner;
+    hw_Token tok, prev_tok;
+    z__String source;
+    hw_State vm;
+};
+
+
+
 z__CStr hw_Scanner_get_context(hw_Scanner const *s, hw_Token const tok)
 {
     if(tok.start < s->start
@@ -109,6 +161,11 @@ void hw_Compiler_delete(hw_CompilerState *cs)
     z__HashStr_delete(&cs->fn_info.var_states);
     z__String_delete(&cs->source);
     z__FREE(cs);
+}
+
+hw_State *hw_Compiler_get_state(hw_CompilerState *cs)
+{
+    return &cs->vm;
 }
 
 hw_Module *hw_Compiler_state_init(hw_State *hw)

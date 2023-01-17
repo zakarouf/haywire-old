@@ -5,6 +5,7 @@
 #include <z_/z__exp.h>
 
 #include "var.h"
+#include "scanner.h"
 #include "io.h"
 #include "../core/type.h"
 #include "../core/assert.h"
@@ -62,6 +63,19 @@ hw_Var hw_Var_new_from_tokt(hw_TypeSys const *ts, hw_TokenType tokt)
             return hw_Var_0();
         } break;
     }
+}
+
+hw_Var hw_Var_new_from_strlit(hw_TypeSys const *ts, const char *str, z__u64 str_sz)
+{
+    hw_Var var;
+    hw_Scanner s;
+    hw_Scanner_new(&s, z__Str((char *)str, str_sz));
+    hw_Token t = hw_Scanner_scan(&s);
+    hw_Var v = hw_Var_new_from_tokt(ts, t.type);
+    hw_assert(v.type, "For Token starting from `%c`, does not declare any variable", t.start[0]);
+    z__Str str_str =  z__Str((char *)t.start, s.end - t.start);
+    hw_Var_call(&v, core.ctor_from_str, &str_str);
+    return var;
 }
 
 #if 0

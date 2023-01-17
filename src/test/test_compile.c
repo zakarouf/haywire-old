@@ -140,3 +140,4 @@ TEST(dummy) {
 }
 
 z__test_impl(TEST_SUITE, dummy, compile_add_int, compile_and_run);
+

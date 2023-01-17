@@ -116,6 +116,10 @@ struct hw_TypeFn {
             fnptr(combine);
             fnptr(filter);
         } hashset;
+        struct {
+            fnptr(append);
+            fnptr(split);;
+        } string;
         #undef fnptr
     } unq;
 

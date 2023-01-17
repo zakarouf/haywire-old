@@ -8,6 +8,7 @@
 #include "opcode.h"
 
 #include <z_/types/fnptr.h>
+#include <z_/types/hashset.h>
 
 typedef struct hw_Func hw_Func;
 typedef struct hw_Module hw_Module;
@@ -49,9 +50,10 @@ struct hw_Func {
 
 
 struct hw_Module {
-    z__u8Arr data;
-    z__Arr(hw_uint) fnpoints;
-    hw_codeArr code;
+    z__u8Arr            data;
+    hw_codeArr          code;
+    z__Arr(hw_uint)     fnpoints;
+    z__HashStr(hw_uint) fnsymbs;
 };
 
 /*
