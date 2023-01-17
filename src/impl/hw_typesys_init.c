@@ -22,6 +22,9 @@ void hw_TypeSys_init_default(hw_TypeSys *ts)
 
     /* 04 */hw_interface_set_for_f64(&tfn);
             hw_TypeSys_addtype(ts, "float", 5, sizeof(hw_float), &tfn);
+
+    /* 05 */hw_interface_set_for_string(&tfn);
+            hw_TypeSys_addtype(ts, "string", 6, sizeof(z__String), &tfn);
 }
 
 

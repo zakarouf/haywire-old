@@ -8,6 +8,7 @@ void hw_interface_set_for_list(hw_TypeFn *tfn);
 void hw_interface_set_for_u64(hw_TypeFn *tfn);
 void hw_interface_set_for_i64(hw_TypeFn *tfn);
 void hw_interface_set_for_f64(hw_TypeFn *tfn);
+void hw_interface_set_for_string(hw_TypeFn *tfn);
 
 void hw_TypeSys_init_default(hw_TypeSys *ts);
 
