@@ -3,6 +3,9 @@
   A Small Language Implementation written in Modern C.
 </div>
 
+# NOTE
+This repo is going archive
+
 ## About
 A small language implementation written in C.
 * Very Small Binary Size (100K)
